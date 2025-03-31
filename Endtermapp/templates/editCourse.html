@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Edit course{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div style="display:flex;">
+    <a href="/Endtermapp/">Home</a>
+    <a href="/Endtermapp/allCourses/" style="padding-left: 50px;">View courses</a>
+    <a href="/Endtermapp/notifications/" style="padding-left: 50px; padding-right: 50px;">Notifications</a>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+    </form>
+</div>
+
+{% if user.profile.role == 'teacher' %}
+<h1>Edit Course</h1>
+<table border="1">
+    {% for x in courses %}
+    <tr>
+        <td>{{ x.id }}</td>
+        <td><a href="../coursePage/{{ x.id }}">{{ x.name }}</a></td>
+        <td><a href="../deleteCourse/{{ x.id }}">delete</a></td>
+        <td><a href="../updateCourse/{{ x.id }}">update</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="../addData/">Add courses</a>
+{% else %}
+<p>
+    You do not have authorisation to access this page.
+</p>
+{% endif %}
+
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}

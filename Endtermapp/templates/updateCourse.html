@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Update {{ course.name }}{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div style="display:flex;">
+    <a href="/Endtermapp/">Home</a>
+    <a href="/Endtermapp/allCourses/" style="padding-left: 50px;">View courses</a>
+    <a href="/Endtermapp/notifications/" style="padding-left: 50px; padding-right: 50px;">Notifications</a>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+    </form>
+</div>
+
+<h1>Update Course</h1>
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+<form action="updateCourseConfirmation/{{ course.id }}" method="post">
+    {% csrf_token %}
+    Name:
+    <input name="name" value="{{ course.name }}">
+    <br />
+    Deadline:
+    <input name="deadline" type="date" value="{{ course.deadline }}">
+    <br />
+    <input type="submit" value="Submit">
+</form>
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}

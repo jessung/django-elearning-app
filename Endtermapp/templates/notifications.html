@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div style="display:flex;">
+    <a href="/Endtermapp/">Home</a>
+    <a href="/Endtermapp/allCourses/" style="padding-left: 50px;">View courses</a>
+    <a href="/Endtermapp/notifications/" style="padding-left: 50px; padding-right: 50px;">Notifications</a>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+    </form>
+</div>
+
+<h2>Notifications</h2>
+<table border="1">
+    {% for x in notifications %}
+    <tr>
+        <td>{{ x.notification }}</td>
+        <td>{{ x.created_at }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}

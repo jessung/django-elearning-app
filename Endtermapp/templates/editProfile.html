@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div style="display:flex;">
+    <a href="/Endtermapp/">Home</a>
+    <a href="/Endtermapp/allCourses/" style="padding-left: 50px;">View courses</a>
+    <a href="/Endtermapp/notifications/" style="padding-left: 50px; padding-right: 50px;">Notifications</a>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+    </form>
+</div>
+
+<h1>Edit Profile</h1>
+<img src="{{MEDIA_URL}}{{ profile.image.url }}" alt="profile picture" width="128" height="128">
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Update Profile Picture</h3>
+<form action="updatePicture/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>Profile Picture:</label>
+    <input name="image" type="file" accept="image/*">
+    <br />
+    <input type="submit" value="Submit">
+</form>
+
+<h3>Edit Name</h3>
+<form action="updateName/" method="post">
+    {% csrf_token %}
+    <label>Username:</label>
+    <input name="username" value="{{ user.username }}">
+    <br />
+    <label>First name:</label>
+    <input name="first_name" value="{{ user.first_name}}">
+    <br />
+    <label>Last name:</label>
+    <input name="last_name" value="{{ user.last_name}}">
+    <br />
+    <input type="submit" value="Submit">
+</form>
+
+<h3>Status Update</h3>
+<form action="updateStatus/" method="post">
+    {% csrf_token %}
+    <label>Status:</label>
+    <input name="status" value="{{ profile.status}}">
+    <br />
+    <input type="submit" value="Submit">
+</form>
+
+<!-- <h3>Change Password</h3>
+<form action="updatePassword/" method="post">
+    {% csrf_token %}
+    <label>Old Password:</label>
+    <input name="oldpassword">
+    <br />
+    <label>New Password:</label>
+    <input name="newpassword">
+    <br />
+    <input type="submit" value="Submit">
+</form> -->
+
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}

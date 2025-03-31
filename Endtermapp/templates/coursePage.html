@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.name }}{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div style="display:flex;">
+    <a href="/Endtermapp/">Home</a>
+    <a href="/Endtermapp/allCourses/" style="padding-left: 50px;">View courses</a>
+    <a href="/Endtermapp/notifications/" style="padding-left: 50px; padding-right: 50px;">Notifications</a>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+    </form>
+</div>
+
+<h1>{{ course.id }} {{ course.name }}</h1>
+
+{% if user.profile.role == 'teacher' and course.teacher == null %}
+<a href="enrolTeacher/{{ course.id }}">
+    Join this course as a teacher
+</a>
+{% endif %}
+
+
+<h2>Course material</h2>
+{% if course.teacher == user %}
+<form action="uploadMaterial/{{ course.id }}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    Upload file:
+    <input type="file" name="file">
+    <br />
+    <input type="submit" value="Upload">
+</form>
+{% endif %}
+<br />
+<table border="1">
+    {% for x in materials %}
+    <tr>
+        <td>{{ x.file }}</td>
+        <td>
+            <a href="readMaterial/{{x.id}}">Read</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+{% if course.deadline %}
+Assignment deadline is {{ course.deadline }}
+{% endif %}
+
+<h3>Lecturer</h3>
+{{ course.teacher.first_name }} {{ course.teacher.last_name }}
+
+
+<h3>Enrolled students</h3>
+<table border="1">
+    {% for x in course.students.all %}
+    <tr>
+        <td>{{ x.id }}</td>
+        <td>
+            <a href="/Endtermapp/viewProfile/{{x.id}}">
+                @{{ x.username }}
+            </a>
+        </td>
+        <td>{{ x.first_name }} {{ x.last_name }}</td>
+        {% if course.teacher == user %}
+        <td>
+            <a href="removeStudent/{{course.id}}/{{x.id}}">Remove</a>
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+
+<h3>Feedback</h3>
+{% if user in course.students.all %}
+<form action="sendFeedback/{{ course.id }}" method="post">
+    {% csrf_token %}
+    <textarea name="feedback" rows="3" cols="50"></textarea>
+    <br />
+    <input type="submit" value="Submit">
+</form>
+{% endif %}
+
+<table border="1">
+    {% for x in feedback %}
+    <tr>
+        <td>{{ x.profile.user.first_name }} {{ x.profile.user.last_name }}</td>
+        <td>{{ x.feedback }}</td>
+        <td>{{ x.created_at }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}

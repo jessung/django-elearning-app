@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Courses{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div style="display:flex;">
+    <a href="/Endtermapp/">Home</a>
+    <a href="/Endtermapp/allCourses/" style="padding-left: 50px;">View courses</a>
+    <a href="/Endtermapp/notifications/" style="padding-left: 50px; padding-right: 50px;">Notifications</a>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+    </form>
+</div>
+
+<h1>Courses</h1>
+<table border="1">
+    {% for x in courses %}
+    {% if x.available %}
+    <tr>
+        <td>{{ x.id }}</td>
+        <td>{{ x.name }}</td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+
+{% if user.profile.role == 'teacher' %}
+<a href="../editCourse/">Edit courses</a>
+{% endif %}
+
+{% if user.profile.role == 'student' %}
+<a href="../enrolCourse/">Enrol</a>
+{% endif %}
+
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}

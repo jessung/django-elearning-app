@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div style="display:flex;">
+    <a href="/Endtermapp/">Home</a>
+    <a href="/Endtermapp/allCourses/" style="padding-left: 50px;">View courses</a>
+    <a href="/Endtermapp/notifications/" style="padding-left: 50px; padding-right: 50px;">Notifications</a>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+    </form>
+</div>
+
+<img src="{{MEDIA_URL}}{{ view.profile.image.url }}" alt="profile picture" width="128" height="128">
+
+
+<h2>{{ view.first_name }} {{ view.last_name }}</h2>
+<p>@{{ view.username }}</p>
+
+{% if view.profile.status %}
+<p>Status: {{ profile.status }}</p>
+{% endif %}
+
+<h3>Courses</h3>
+<table border="1">
+    {% for x in teacher_courses %}
+    <tr>
+        <td>{{ x.id }}</td>
+        <td><a href="../coursePage/{{ x.id }}">{{ x.name }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<table border="1">
+    {% for x in courses %}
+    <tr>
+        <td>{{ x.id }}</td>
+        <td><a href="../coursePage/{{ x.id }}">{{ x.name }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}

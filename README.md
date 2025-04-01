@@ -27,7 +27,7 @@ On Linux, run:
 ````
 sudo service redis-server start
 ````
-Start the Daphne server
+5. Start the Daphne server
 
 Open a new tab in the command prompt
 

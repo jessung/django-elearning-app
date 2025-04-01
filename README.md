@@ -18,11 +18,13 @@ python3 manage.py migrate
 In order to use the websocket, run the Redis server and run the project on the Daphne server.
 The steps to do this on the Windows OS:
 1. Run Linux
+
 Open the command prompt and run:
 ````
 wsl --install
 ````
 2. Start Redis
+
 On Linux, run:
 ````
 sudo service redis-server start
@@ -37,7 +39,7 @@ Activate the virtual environment
 ````
 .\<env name>\Scripts\activate
 ````
-Run the command:
+Start the server:
 ````
 daphne <project name>.asgi:application
 ````

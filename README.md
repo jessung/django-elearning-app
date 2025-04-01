@@ -24,10 +24,15 @@ wsl --install
 ````
 4. Start Redis
 On Linux, run:
-- sudo service redis-server start
+````
+sudo service redis-server start
+````
 Start the Daphne server
+
 Open a new tab in the command prompt
+
 Redirect to the project location
+
 Activate the virtual environment
 ````
 .\<env name>\Scripts\activate
